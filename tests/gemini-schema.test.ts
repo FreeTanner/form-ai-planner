@@ -19,5 +19,12 @@ test("all AI schemas retain structure without nested range and length constraint
 
 test("schema conversion preserves property names that resemble validation keywords", () => {
   const wire = geminiJsonSchema(z.object({ minimum: z.number().min(2), maxItems: z.array(z.string()).max(3) }), "test");
-  assert.deepEqual(wire.properties, { minimum: { type: "number" }, maxItems: { type: "array", items: { type: "string" } } });
+  const wireObject = wire as unknown as {
+    properties: Record<string, unknown>;
+  };
+
+  assert.deepEqual(wireObject.properties, {
+    minimum: { type: "number" },
+    maxItems: { type: "array", items: { type: "string" } }
+  });
 });
